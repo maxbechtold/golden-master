@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>maxbe.goldenmaster</groupId>
+	<artifactId>goldenmaster-junit-extension</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Golden Master JUnit Extension</name>
+	<description>Framework for painless Golden Master Testing</description>
+	<inceptionYear>2017</inceptionYear>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<junit.jupiter.version>5.0.2</junit.jupiter.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.nikolavp</groupId>
+			<artifactId>approval-core</artifactId>
+			<version>0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opentest4j</groupId>
+			<artifactId>opentest4j</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>4.12.2</version>
+		</dependency>
+	</dependencies>
+
+</project>

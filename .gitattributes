@@ -1,0 +1,9 @@
+*.java text eol=crlf
+*.properties text eol=crlf
+*.xml text eol=crlf
+*.txt text eol=crlf
+*.md text eol=crlf
+*.launch text eol=crlf
+.* text eol=crlf
+*.prefs text eol=crlf
+*.approved text eol=crlf

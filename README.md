@@ -1,7 +1,13 @@
 # golden-master
-A harness for writing Golden Master tests in Java
+A harness for writing [Golden Master tests](https://dzone.com/articles/testing-legacy-code-golden) in Java
+
+## Requirements
+Java 8
 
 ## How to use (preliminary explanation)
+
+You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so:
+
 ```java
 @BeforeEach
 void setUp(File outputFile, Integer index) throws Exception {

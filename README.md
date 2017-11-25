@@ -8,17 +8,21 @@ Java 8
 
 ## How to use (preliminary explanation)
 
-You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so:
+You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so (check out ExampleGoldenMasterTest for a more detailed example):
 
 ```java
-@BeforeEach
-void setUp(File outputFile, Integer index) throws Exception {
-  // Setup up the inputs for your test run which must write output to the given file
-}
+@GoldenMasterTest
+public class ATest {
 
-@GoldenMasterRun
-void instrumentProgramUnderTest(Integer index) throws Exception {
-  // Do some hard work whose output will be compared to that of previous runs
+  @BeforeEach
+  void setUp(File outputFile, Integer index) throws Exception {
+    // Setup up the inputs for your test run which must write output to the given file
+  }
+  
+  @GoldenMasterRun
+  void instrumentProgramUnderTest(Integer index) throws Exception {
+    // Do some hard work whose output will be compared to that of previous runs
+  }
 }
 ```
 

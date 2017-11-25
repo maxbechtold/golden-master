@@ -16,8 +16,7 @@ void setUp(File outputFile, Integer index) throws Exception {
   // Setup up the inputs for your test run which must write output to the given file
 }
 
-@TestTemplate
-@ExtendWith(RunInvocationContextProvider.class)
+@GoldenMasterRun
 void instrumentProgramUnderTest(Integer index) throws Exception {
   // Do some hard work whose output will be compared to that of previous runs
 }

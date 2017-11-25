@@ -11,8 +11,11 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
@@ -22,16 +25,16 @@ import maxbe.goldenmaster.approval.FileConverter;
 import maxbe.goldenmaster.approval.JUnitReporter;
 import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 
-public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeEachCallback,
-        AfterTestExecutionCallback, AfterAllCallback {
+public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeAllCallback,
+        BeforeEachCallback, AfterTestExecutionCallback, AfterAllCallback {
 
-    // TODO #35 Other output means?
+    private static final Namespace NAMESPACE = Namespace.create(RunInvocationContextProvider.class);
+    private static final String REPORTER_KEY = "REPORTER";
+    private static final String APPROVAL_BAT_FILE_NAME = "approveAllFailed.bat";
+
     private final File outputFile;
 
-    private static final String APPROVAL_BAT_FILE_NAME = "approveAllFailed.bat";
-    private static final JUnitReporter REPORTER = new JUnitReporter();
-
-    public TemplatedTestPathMapper<File> pathMapper;
+    private TemplatedTestPathMapper<File> pathMapper;
 
     public RunInvocationContextProvider() throws IOException {
         outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), "txt");
@@ -61,6 +64,11 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     }
 
     @Override
+    public void beforeAll(ExtensionContext context) throws Exception {
+        getStore(context).put(REPORTER_KEY, new JUnitReporter());
+    }
+
+    @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         pathMapper = new TemplatedTestPathMapper<>(context, Paths.get("src", "test", "resources", "approved"));
     }
@@ -71,7 +79,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
                 .withPathMapper(pathMapper)//
                 // TODO #35 Fork and suggest fix
                 .withConveter(new FileConverter())//
-                .withReporter(REPORTER).build();
+                .withReporter(getReporter(context)).build();
 
         String fileName = context.getRequiredTestMethod().getName() + ".approved";
         approval.verify(outputFile, Paths.get(fileName));
@@ -79,7 +87,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        List<String> commands = REPORTER.getApprovalCommands();
+        List<String> commands = getReporter(context).getApprovalCommands();
         File approvalFile = new File(APPROVAL_BAT_FILE_NAME);
         if (commands.isEmpty()) {
             approvalFile.delete();
@@ -89,5 +97,13 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
             Files.write(approvalFile.toPath(), commands, StandardCharsets.UTF_8);
         }
         outputFile.delete();
+    }
+
+    private JUnitReporter getReporter(ExtensionContext context) {
+        return getStore(context).get(REPORTER_KEY, JUnitReporter.class);
+    }
+
+    private Store getStore(ExtensionContext context) {
+        return context.getStore(NAMESPACE);
     }
 }

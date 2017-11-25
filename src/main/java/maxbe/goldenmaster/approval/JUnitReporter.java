@@ -1,9 +1,9 @@
 package maxbe.goldenmaster.approval;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,8 +32,12 @@ public class JUnitReporter implements Reporter {
         }
 
         addMoveCommand(fileForVerification, fileForApproval);
-        throw new AssertionFailedError("Approval failed, please check console output.\n", new String(oldValue, UTF_8),
-                new String(newValue, UTF_8));
+        throw new AssertionFailedError("Approval failed, please check console output.\n", asString(oldValue),
+                asString(newValue));
+    }
+
+    private String asString(byte[] oldValue) {
+        return new String(oldValue, StandardCharsets.UTF_8);
     }
 
     private double calculateError(byte[] oldValue, byte[] newValue) {

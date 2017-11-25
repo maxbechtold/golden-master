@@ -13,7 +13,7 @@ You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/
 ```java
 @BeforeEach
 void setUp(File outputFile, Integer index) throws Exception {
-  // Setup up your test inputs which must write output to the file given
+  // Setup up the inputs for your test run which must write output to the given file
 }
 
 @TestTemplate

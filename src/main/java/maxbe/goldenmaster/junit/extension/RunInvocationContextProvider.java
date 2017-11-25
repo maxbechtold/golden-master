@@ -22,9 +22,9 @@ import maxbe.goldenmaster.approval.FileConverter;
 import maxbe.goldenmaster.approval.JUnitReporter;
 import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 
-public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeEachCallback, AfterTestExecutionCallback, AfterAllCallback {
+public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeEachCallback,
+		AfterTestExecutionCallback, AfterAllCallback {
 
-	private static final int RUNS = 100;
 	// TODO #35 Other output means?
 	private final File outputFile;
 
@@ -44,7 +44,20 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-		return IntStream.range(0, RUNS).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile));
+		int repetitions = determineRepetitions(context);
+		return IntStream.range(0, repetitions).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile));
+	}
+
+	private int determineRepetitions(ExtensionContext context) {
+		GoldenMasterRun goldenMasterAnnotation = context.getElement().get().getAnnotation(GoldenMasterRun.class);
+		if (goldenMasterAnnotation == null) {
+			return GoldenMasterRun.DEFAULT_REPETITIONS;
+		}
+		int repetitions = goldenMasterAnnotation.repetitions();
+		if (repetitions < 1) {
+			throw new IllegalArgumentException("Must specify a number greater than 0 for repetitions");
+		}
+		return repetitions;
 	}
 
 	@Override
@@ -71,7 +84,8 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 		if (commands.isEmpty()) {
 			approvalFile.delete();
 		} else {
-			System.out.println("Not all approvals passed, please run " + APPROVAL_BAT_FILE_NAME + " to approve current results");
+			System.out.println(
+					"Not all approvals passed, please run " + APPROVAL_BAT_FILE_NAME + " to approve current results");
 			Files.write(approvalFile.toPath(), commands, StandardCharsets.UTF_8);
 		}
 		outputFile.delete();

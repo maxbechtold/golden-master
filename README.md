@@ -8,7 +8,7 @@ Java 8
 
 ## How to use (preliminary explanation)
 
-You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so (check out ExampleGoldenMasterTest for a more detailed example):
+You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so (check out ``ExampleGoldenMasterTest`` for a more detailed example):
 
 ```java
 @GoldenMasterTest

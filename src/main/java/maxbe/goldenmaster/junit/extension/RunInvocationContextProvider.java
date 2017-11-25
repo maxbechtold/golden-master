@@ -23,71 +23,71 @@ import maxbe.goldenmaster.approval.JUnitReporter;
 import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 
 public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeEachCallback,
-		AfterTestExecutionCallback, AfterAllCallback {
+        AfterTestExecutionCallback, AfterAllCallback {
 
-	// TODO #35 Other output means?
-	private final File outputFile;
+    // TODO #35 Other output means?
+    private final File outputFile;
 
-	private static final String APPROVAL_BAT_FILE_NAME = "approveAllFailed.bat";
-	private static final JUnitReporter REPORTER = new JUnitReporter();
+    private static final String APPROVAL_BAT_FILE_NAME = "approveAllFailed.bat";
+    private static final JUnitReporter REPORTER = new JUnitReporter();
 
-	public TemplatedTestPathMapper<File> pathMapper;
+    public TemplatedTestPathMapper<File> pathMapper;
 
-	public RunInvocationContextProvider() throws IOException {
-		outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), "txt");
-	}
+    public RunInvocationContextProvider() throws IOException {
+        outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), "txt");
+    }
 
-	@Override
-	public boolean supportsTestTemplate(ExtensionContext context) {
-		return true;
-	}
+    @Override
+    public boolean supportsTestTemplate(ExtensionContext context) {
+        return true;
+    }
 
-	@Override
-	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-		int repetitions = determineRepetitions(context);
-		return IntStream.range(0, repetitions).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile));
-	}
+    @Override
+    public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+        int repetitions = determineRepetitions(context);
+        return IntStream.range(0, repetitions).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile));
+    }
 
-	private int determineRepetitions(ExtensionContext context) {
-		GoldenMasterRun goldenMasterAnnotation = context.getElement().get().getAnnotation(GoldenMasterRun.class);
-		if (goldenMasterAnnotation == null) {
-			return GoldenMasterRun.DEFAULT_REPETITIONS;
-		}
-		int repetitions = goldenMasterAnnotation.repetitions();
-		if (repetitions < 1) {
-			throw new IllegalArgumentException("Must specify a number greater than 0 for repetitions");
-		}
-		return repetitions;
-	}
+    private int determineRepetitions(ExtensionContext context) {
+        GoldenMasterRun goldenMasterAnnotation = context.getElement().get().getAnnotation(GoldenMasterRun.class);
+        if (goldenMasterAnnotation == null) {
+            return GoldenMasterRun.DEFAULT_REPETITIONS;
+        }
+        int repetitions = goldenMasterAnnotation.repetitions();
+        if (repetitions < 1) {
+            throw new IllegalArgumentException("Must specify a number greater than 0 for repetitions");
+        }
+        return repetitions;
+    }
 
-	@Override
-	public void beforeEach(ExtensionContext context) throws Exception {
-		pathMapper = new TemplatedTestPathMapper<>(context, Paths.get("src", "test", "resources", "approved"));
-	}
+    @Override
+    public void beforeEach(ExtensionContext context) throws Exception {
+        pathMapper = new TemplatedTestPathMapper<>(context, Paths.get("src", "test", "resources", "approved"));
+    }
 
-	@Override
-	public void afterTestExecution(ExtensionContext context) throws Exception {
-		Approval<File> approval = Approval.of(File.class)//
-				.withPathMapper(pathMapper)//
-				// TODO #35 Fork and suggest fix
-				.withConveter(new FileConverter())//
-				.withReporter(REPORTER).build();
+    @Override
+    public void afterTestExecution(ExtensionContext context) throws Exception {
+        Approval<File> approval = Approval.of(File.class)//
+                .withPathMapper(pathMapper)//
+                // TODO #35 Fork and suggest fix
+                .withConveter(new FileConverter())//
+                .withReporter(REPORTER).build();
 
-		String fileName = context.getRequiredTestMethod().getName() + ".approved";
-		approval.verify(outputFile, Paths.get(fileName));
-	}
+        String fileName = context.getRequiredTestMethod().getName() + ".approved";
+        approval.verify(outputFile, Paths.get(fileName));
+    }
 
-	@Override
-	public void afterAll(ExtensionContext context) throws Exception {
-		List<String> commands = REPORTER.getApprovalCommands();
-		File approvalFile = new File(APPROVAL_BAT_FILE_NAME);
-		if (commands.isEmpty()) {
-			approvalFile.delete();
-		} else {
-			System.out.println(
-					"Not all approvals passed, please run " + APPROVAL_BAT_FILE_NAME + " to approve current results");
-			Files.write(approvalFile.toPath(), commands, StandardCharsets.UTF_8);
-		}
-		outputFile.delete();
-	}
+    @Override
+    public void afterAll(ExtensionContext context) throws Exception {
+        List<String> commands = REPORTER.getApprovalCommands();
+        File approvalFile = new File(APPROVAL_BAT_FILE_NAME);
+        if (commands.isEmpty()) {
+            approvalFile.delete();
+        } else {
+            System.out.println(
+                    "Not all approvals passed, please run " + APPROVAL_BAT_FILE_NAME + " to approve current results");
+            Files.write(approvalFile.toPath(), commands, StandardCharsets.UTF_8);
+        }
+        outputFile.delete();
+    }
 }

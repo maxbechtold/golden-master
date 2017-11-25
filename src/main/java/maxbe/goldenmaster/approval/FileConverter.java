@@ -8,12 +8,12 @@ import com.github.approval.converters.Converter;
 
 public class FileConverter implements Converter<File> {
 
-	@Override
-	public byte[] getRawForm(File value) {
-		try {
-			return Files.readAllBytes(value.toPath());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @Override
+    public byte[] getRawForm(File value) {
+        try {
+            return Files.readAllBytes(value.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

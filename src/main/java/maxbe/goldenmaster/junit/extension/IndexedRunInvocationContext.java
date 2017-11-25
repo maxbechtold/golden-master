@@ -12,46 +12,46 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
 class IndexedRunInvocationContext implements TestTemplateInvocationContext {
 
-	private final Integer index;
-	private final File outputFile;
+    private final Integer index;
+    private final File outputFile;
 
-	IndexedRunInvocationContext(Integer index, File outputFile) {
-		this.index = index;
-		this.outputFile = outputFile;
-	}
+    IndexedRunInvocationContext(Integer index, File outputFile) {
+        this.index = index;
+        this.outputFile = outputFile;
+    }
 
-	@Override
-	public List<Extension> getAdditionalExtensions() {
-		return Arrays.asList(indexResolver(), outputFileResolver());
-	}
+    @Override
+    public List<Extension> getAdditionalExtensions() {
+        return Arrays.asList(indexResolver(), outputFileResolver());
+    }
 
-	private ParameterResolver indexResolver() {
-		return new ParameterResolver() {
+    private ParameterResolver indexResolver() {
+        return new ParameterResolver() {
 
-			@Override
-			public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-				return parameterContext.getParameter().getType().equals(Integer.class);
-			}
+            @Override
+            public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+                return parameterContext.getParameter().getType().equals(Integer.class);
+            }
 
-			@Override
-			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-				return index;
-			}
-		};
-	}
+            @Override
+            public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+                return index;
+            }
+        };
+    }
 
-	private ParameterResolver outputFileResolver() {
-		return new ParameterResolver() {
+    private ParameterResolver outputFileResolver() {
+        return new ParameterResolver() {
 
-			@Override
-			public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-				return parameterContext.getParameter().getType().equals(File.class);
-			}
+            @Override
+            public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+                return parameterContext.getParameter().getType().equals(File.class);
+            }
 
-			@Override
-			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-				return outputFile;
-			}
-		};
-	}
+            @Override
+            public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+                return outputFile;
+            }
+        };
+    }
 }

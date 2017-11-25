@@ -55,7 +55,7 @@ public class JUnitReporter implements Reporter {
         approvalCommands.add(getMoveCommand(fileForVerification, fileForApproval));
     }
 
-    // TODO #35 Get rid of OS dependency
+    // TODO #3 Get rid of OS dependency
     private String getMoveCommand(File fileForVerification, File fileForApproval) {
         return "move /Y " + quote(fileForApproval) + " " + quote(fileForVerification);
     }

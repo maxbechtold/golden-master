@@ -22,7 +22,7 @@ public class TemplatedTestPathMapper<T> implements PathMapper<T> {
     }
 
     private String getRunIdSuffix(String displayName) {
-        // TODO #35 This has to be done better!
+        // TODO #3 This has to be done better!
         int runId = Integer.valueOf(displayName.substring(1, displayName.length() - 1)) - 1;
         String runIdSuffix = "[" + runId + "]";
         return runIdSuffix;

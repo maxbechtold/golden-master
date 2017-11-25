@@ -77,7 +77,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     public void afterTestExecution(ExtensionContext context) throws Exception {
         Approval<File> approval = Approval.of(File.class)//
                 .withPathMapper(pathMapper)//
-                // TODO #35 Fork and suggest fix
+                // TODO #3 Fork and suggest fix
                 .withConveter(new FileConverter())//
                 .withReporter(getReporter(context)).build();
 

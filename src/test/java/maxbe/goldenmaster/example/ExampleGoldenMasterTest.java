@@ -7,12 +7,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import maxbe.goldenmaster.junit.extension.GoldenMasterRun;
-import maxbe.goldenmaster.junit.extension.RunInvocationContextProvider;
+import maxbe.goldenmaster.junit.extension.GoldenMasterTest;
 
-@ExtendWith(RunInvocationContextProvider.class)
+@GoldenMasterTest
 public class ExampleGoldenMasterTest {
 
     private File outputFile;

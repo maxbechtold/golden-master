@@ -1,6 +1,8 @@
 # golden-master
 A harness for writing [Golden Master tests](https://dzone.com/articles/testing-legacy-code-golden) in Java
 
+[![](https://jitpack.io/v/maxbechtold/golden-master.svg)](https://jitpack.io/#maxbechtold/golden-master)
+
 ## Requirements
 Java 8
 

@@ -8,7 +8,7 @@ public class AwkwardClass {
 
     public String doYourMagic(Integer index) {
         int base = new Random(index).nextInt(123456);
-        int complicatedResult = 1;
+        int complicatedResult = 2;
         complicatedResult = base * complicatedResult + entropy.hashCode() * index;
         return String.valueOf(complicatedResult);
     }

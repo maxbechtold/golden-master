@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.TestAbortedException;
@@ -15,10 +13,10 @@ import com.github.approval.Reporter;
 public class JUnitReporter implements Reporter {
 
     private static final double MAX_DEVIATION = 0.000;
-    private List<String> approvalCommands = new LinkedList<>();
+    private final ApprovalScriptWriter approvalScriptWriter;
 
-    public List<String> getApprovalCommands() {
-        return approvalCommands;
+    public JUnitReporter(ApprovalScriptWriter approvalScriptWriter) {
+        this.approvalScriptWriter = approvalScriptWriter;
     }
 
     @Override
@@ -31,7 +29,7 @@ public class JUnitReporter implements Reporter {
             }
         }
 
-        addMoveCommand(fileForVerification, fileForApproval);
+        approvalScriptWriter.addMoveCommand(fileForApproval, fileForVerification);
         throw new AssertionFailedError("Approval failed, please check console output.\n", asString(oldValue),
                 asString(newValue));
     }
@@ -49,19 +47,6 @@ public class JUnitReporter implements Reporter {
             }
         }
         return diffCount / (double) length;
-    }
-
-    private void addMoveCommand(File fileForVerification, File fileForApproval) {
-        approvalCommands.add(getMoveCommand(fileForVerification, fileForApproval));
-    }
-
-    // TODO #3 Get rid of OS dependency
-    private String getMoveCommand(File fileForVerification, File fileForApproval) {
-        return "move /Y " + quote(fileForApproval) + " " + quote(fileForVerification);
-    }
-
-    private String quote(File file) {
-        return "\"" + file.getAbsolutePath() + "\"";
     }
 
     @Override

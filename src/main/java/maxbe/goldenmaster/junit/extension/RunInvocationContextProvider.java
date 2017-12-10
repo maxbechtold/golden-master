@@ -2,10 +2,7 @@ package maxbe.goldenmaster.junit.extension;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -21,8 +18,10 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 import com.github.approval.Approval;
 
+import maxbe.goldenmaster.approval.ApprovalScriptWriter;
 import maxbe.goldenmaster.approval.FileConverter;
 import maxbe.goldenmaster.approval.JUnitReporter;
+import maxbe.goldenmaster.approval.OS;
 import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 
 public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeAllCallback,
@@ -30,7 +29,8 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     private static final Namespace NAMESPACE = Namespace.create(RunInvocationContextProvider.class);
     private static final String REPORTER_KEY = "REPORTER";
-    private static final String APPROVAL_BAT_FILE_NAME = "approveAllFailed.bat";
+    private static final String SCRIPT_WRITER_KEY = "SCRIPT_WRITER";
+    private static final String APPROVAL_SCRIPT_NAME = "approveAllFailed";
 
     private final File outputFile;
 
@@ -65,7 +65,24 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        getStore(context).put(REPORTER_KEY, new JUnitReporter());
+        ApprovalScriptWriter approvalScriptWriter = createApprovalScriptWriter();
+        getStore(context).put(SCRIPT_WRITER_KEY, approvalScriptWriter);
+        getStore(context).put(REPORTER_KEY, new JUnitReporter(approvalScriptWriter));
+    }
+
+    private ApprovalScriptWriter createApprovalScriptWriter() {
+        return new ApprovalScriptWriter(guessOperatingSystem(), getApprovalScriptFileName());
+    }
+
+    private File getApprovalScriptFileName() {
+        if (guessOperatingSystem() == OS.Windows) {
+            return new File(APPROVAL_SCRIPT_NAME + ".bat");
+        }
+        return new File(APPROVAL_SCRIPT_NAME);
+    }
+
+    private OS guessOperatingSystem() {
+        return System.getProperty("os.name").toLowerCase().contains("win") ? OS.Windows : OS.ShellBased;
     }
 
     @Override
@@ -79,7 +96,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
                 .withPathMapper(pathMapper)//
                 // TODO #3 Fork and suggest fix
                 .withConveter(new FileConverter())//
-                .withReporter(getReporter(context)).build();
+                .withReporter(get(context, JUnitReporter.class, REPORTER_KEY)).build();
 
         String fileName = context.getRequiredTestMethod().getName() + ".approved";
         approval.verify(outputFile, Paths.get(fileName));
@@ -87,20 +104,18 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        List<String> commands = getReporter(context).getApprovalCommands();
-        File approvalFile = new File(APPROVAL_BAT_FILE_NAME);
-        if (commands.isEmpty()) {
-            approvalFile.delete();
-        } else {
-            System.out.println(
-                    "Not all approvals passed, please run " + APPROVAL_BAT_FILE_NAME + " to approve current results");
-            Files.write(approvalFile.toPath(), commands, StandardCharsets.UTF_8);
+        ApprovalScriptWriter scriptWriter = get(context, ApprovalScriptWriter.class, SCRIPT_WRITER_KEY);
+        boolean scriptCreated = scriptWriter.updateScript();
+
+        if (scriptCreated) {
+            System.out.println("Not all approvals passed, please execute " + getApprovalScriptFileName()
+                    + " to approve current results");
         }
         outputFile.delete();
     }
 
-    private JUnitReporter getReporter(ExtensionContext context) {
-        return getStore(context).get(REPORTER_KEY, JUnitReporter.class);
+    private <T> T get(ExtensionContext context, Class<T> type, String key) {
+        return getStore(context).get(key, type);
     }
 
     private Store getStore(ExtensionContext context) {

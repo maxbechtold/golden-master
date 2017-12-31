@@ -21,7 +21,6 @@ import com.github.approval.Approval;
 import maxbe.goldenmaster.approval.ApprovalScriptWriter;
 import maxbe.goldenmaster.approval.FileConverter;
 import maxbe.goldenmaster.approval.JUnitReporter;
-import maxbe.goldenmaster.approval.OS;
 import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 
 public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeAllCallback,
@@ -65,24 +64,9 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        ApprovalScriptWriter approvalScriptWriter = createApprovalScriptWriter();
+        ApprovalScriptWriter approvalScriptWriter = ApprovalScriptWriter.create(APPROVAL_SCRIPT_NAME);
         getStore(context).put(SCRIPT_WRITER_KEY, approvalScriptWriter);
         getStore(context).put(REPORTER_KEY, new JUnitReporter(approvalScriptWriter));
-    }
-
-    private ApprovalScriptWriter createApprovalScriptWriter() {
-        return new ApprovalScriptWriter(guessOperatingSystem(), getApprovalScriptFileName());
-    }
-
-    private File getApprovalScriptFileName() {
-        if (guessOperatingSystem() == OS.Windows) {
-            return new File(APPROVAL_SCRIPT_NAME + ".bat");
-        }
-        return new File(APPROVAL_SCRIPT_NAME);
-    }
-
-    private OS guessOperatingSystem() {
-        return System.getProperty("os.name").toLowerCase().contains("win") ? OS.Windows : OS.ShellBased;
     }
 
     @Override
@@ -108,7 +92,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
         boolean scriptCreated = scriptWriter.updateScript();
 
         if (scriptCreated) {
-            System.out.println("Not all approvals passed, please execute " + getApprovalScriptFileName()
+            System.out.println("Not all approvals passed, please execute " + scriptWriter.getScriptFile().getName()
                     + " to approve current results");
         }
         outputFile.delete();

@@ -20,6 +20,10 @@ public class ApprovalScriptWriter {
         overwriteFlag = determineOverwriteFlag(os);
     }
 
+    public File getScriptFile() {
+        return scriptFile;
+    }
+
     private String determineOverwriteFlag(OS os) {
         return os == OS.Windows ? "/Y" : "-f";
     }
@@ -59,6 +63,21 @@ public class ApprovalScriptWriter {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static ApprovalScriptWriter create(String approvalScriptName) {
+        return new ApprovalScriptWriter(guessOperatingSystem(), getApprovalScriptFileName(approvalScriptName));
+    }
+
+    private static File getApprovalScriptFileName(String approvalScriptName) {
+        if (guessOperatingSystem() == OS.Windows) {
+            return new File(approvalScriptName + ".bat");
+        }
+        return new File(approvalScriptName);
+    }
+
+    private static OS guessOperatingSystem() {
+        return System.getProperty("os.name").toLowerCase().contains("win") ? OS.Windows : OS.ShellBased;
     }
 
 }

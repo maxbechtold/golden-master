@@ -26,7 +26,7 @@ public class ATest {
 }
 ```
 
-When you run your test for the first time, the outputs will serve as the initial *master files*. You are asked to run the test again to approve the previous outputs.
+When you run your test for the first time, the outputs will serve as the initial *master files*. You are asked to *approve* the previous outputs by manually executing a generated script file.
 
 Every successive test run will then be matched against those master files - and fail if there are changes (e.g. due to mistakes during refactoring of the tested code).
 

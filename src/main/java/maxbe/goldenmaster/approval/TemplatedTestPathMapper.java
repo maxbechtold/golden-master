@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.github.approval.PathMapper;
 
+// FIXME MAX There's a bootstrap problem, the initial approval files are empty...
 public class TemplatedTestPathMapper<T> implements PathMapper<T> {
 
 	private final Path approvalPath;

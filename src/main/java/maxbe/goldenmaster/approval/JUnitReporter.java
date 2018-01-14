@@ -56,6 +56,7 @@ public class JUnitReporter implements Reporter {
 
     @Override
     public void approveNew(byte[] value, File fileForApproval, File fileForVerification) {
+    	// TODO MAX If this message is correct, adapt README.md
         fail("First approval, created approval file. Please run again");
     }
 }

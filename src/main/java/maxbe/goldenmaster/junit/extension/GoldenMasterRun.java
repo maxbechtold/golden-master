@@ -15,6 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public @interface GoldenMasterRun {
 
     public static final int DEFAULT_REPETITIONS = 100;
+    public static final String AUTO_ID = "";
 
     int repetitions() default DEFAULT_REPETITIONS;
+    
+    /**
+     * Allows to define multiple instrumentations of the same usecase which can be approved against each other.
+     * TODO #3 Document in GitHub
+     */
+    String id() default AUTO_ID;
+
 }

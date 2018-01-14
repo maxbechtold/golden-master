@@ -36,7 +36,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     private TemplatedTestPathMapper<File> pathMapper;
 
     public RunInvocationContextProvider() throws IOException {
-        outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), "txt");
+        outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), ".txt");
     }
 
     @Override

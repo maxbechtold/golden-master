@@ -1,5 +1,5 @@
 # golden-master
-A harness for writing [Golden Master tests](https://dzone.com/articles/testing-legacy-code-golden) in Java
+A harness for easy writing of [Golden Master tests](https://dzone.com/articles/testing-legacy-code-golden) in Java
 
 [![](https://jitpack.io/v/maxbechtold/golden-master.svg)](https://jitpack.io/#maxbechtold/golden-master) [![Build Status](https://travis-ci.org/maxbechtold/golden-master.svg?branch=master)](https://travis-ci.org/maxbechtold/golden-master)
 

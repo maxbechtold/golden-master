@@ -78,7 +78,6 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         String approvalId = getApprovalId(context) + getRunIdSuffix(context.getDisplayName());
-        // TODO MAX Path must include run ID
         pathMapper = new TemplatedTestPathMapper<>(context, Paths.get("src", "test", "resources", "approved"),
                 approvalId);
     }

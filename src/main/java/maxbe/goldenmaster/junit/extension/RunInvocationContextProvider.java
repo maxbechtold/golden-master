@@ -2,7 +2,6 @@ package maxbe.goldenmaster.junit.extension;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -51,7 +50,8 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
         return IntStream.range(0, repetitions).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile));
     }
 
-    // TODO #3 Ensure same number of repetitions for all tests with the same approvalId by moving repetitions to @GoldenMasterTest?
+    // TODO #2 Ensure same number of repetitions for all tests with the same approvalId by moving repetitions to
+    // @GoldenMasterTest?
     private int determineRepetitions(ExtensionContext context) {
         GoldenMasterRun goldenMasterAnnotation = getAnnotation(context);
         if (goldenMasterAnnotation == null) {
@@ -64,9 +64,9 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
         return repetitions;
     }
 
-	private GoldenMasterRun getAnnotation(ExtensionContext context) {
-		return context.getElement().get().getAnnotation(GoldenMasterRun.class);
-	}
+    private GoldenMasterRun getAnnotation(ExtensionContext context) {
+        return context.getElement().get().getAnnotation(GoldenMasterRun.class);
+    }
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
@@ -77,9 +77,10 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-		String approvalId = getApprovalId(context) + getRunIdSuffix(context.getDisplayName());
-		// TODO MAX Path must include run ID
-		pathMapper = new TemplatedTestPathMapper<>(context, Paths.get("src", "test", "resources", "approved"), approvalId);
+        String approvalId = getApprovalId(context) + getRunIdSuffix(context.getDisplayName());
+        // TODO MAX Path must include run ID
+        pathMapper = new TemplatedTestPathMapper<>(context, Paths.get("src", "test", "resources", "approved"),
+                approvalId);
     }
 
     @Override
@@ -94,20 +95,20 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
         approval.verify(outputFile, Paths.get(fileName));
     }
 
-	private String getApprovalId(ExtensionContext context) {
-		GoldenMasterRun annotation = getAnnotation(context);
-		if (!GoldenMasterRun.AUTO_ID.equals(annotation.id())) {
-			return annotation.id();
-		}
-		return context.getRequiredTestMethod().getName();
-	}
+    private String getApprovalId(ExtensionContext context) {
+        GoldenMasterRun annotation = getAnnotation(context);
+        if (!GoldenMasterRun.AUTO_ID.equals(annotation.id())) {
+            return annotation.id();
+        }
+        return context.getRequiredTestMethod().getName();
+    }
 
-	private String getRunIdSuffix(String displayName) {
-		// REVIEW #3 Can this be done better?
-		String idWithoutBraces = displayName.substring(1, displayName.length() - 1);
-		int runId = Integer.valueOf(idWithoutBraces) - 1;
-		return "[" + runId + "]";
-	}
+    private String getRunIdSuffix(String displayName) {
+        // REVIEW #3 Can this be done better?
+        String idWithoutBraces = displayName.substring(1, displayName.length() - 1);
+        int runId = Integer.valueOf(idWithoutBraces) - 1;
+        return "[" + runId + "]";
+    }
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {

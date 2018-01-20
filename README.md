@@ -8,6 +8,7 @@ A harness for easy writing of [Golden Master tests](https://dzone.com/articles/t
 * No cumbersome boilerplate code - focus on your program instrumentation
 * Built-in repetitions - easily verify 10, 100, 10,000 program inputs
 * IDE integration - continuous visual feedback
+
 ![screenshot](https://github.com/maxbechtold/golden-master/blob/master/src/main/resources/docs/ide-support.PNG)
 
 ## How to use (basic explanation)

@@ -6,14 +6,14 @@ A harness for easy writing of [Golden Master tests](https://dzone.com/articles/t
 ## Benefits
 
 * No cumbersome boilerplate code - focus on your program instrumentation
-* Built-in repetitions - easily verify 10, 100, 10,000 program inputs
+* Built-in repetitions - easily verify 10, 100, or 10,000 program inputs
 * IDE integration - continuous visual feedback
 
-![screenshot](https://github.com/maxbechtold/golden-master/blob/master/src/main/resources/docs/ide-support.PNG)
+![screenshot](src/main/resources/docs/ide-support.PNG)
 
 ## How to use (basic explanation)
 
-You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so (check out ``ExampleGoldenMasterTest`` for a more detailed example):
+You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so (check out [ExampleGoldenMasterTest](src/test/java/maxbe/goldenmaster/example/ExampleGoldenMasterTest) for a more detailed example):
 
 ```java
 @GoldenMasterTest
@@ -37,7 +37,8 @@ Every successive test run will then be matched against those master files - and 
 
 If you change the tested code in a manner you consider *valid*, you can approve any changes that result in the output files by running the provided approval script.
 
-*(I'm working on simplifying this step)
+*(I'm working on [simplifying this step](https://github.com/maxbechtold/golden-master/issues/2))
+
 
 ## Requirements
 Java 8

@@ -7,20 +7,19 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import com.github.approval.PathMapper;
 
-// FIXME MAX There's a bootstrap problem, the initial approval files are empty...
 public class TemplatedTestPathMapper<T> implements PathMapper<T> {
 
-	private final Path approvalPath;
+    private final Path approvalPath;
 
-	public TemplatedTestPathMapper(ExtensionContext context, Path basePath, String approvalId) {
-		Class<?> testClass = context.getRequiredTestClass();
+    public TemplatedTestPathMapper(ExtensionContext context, Path basePath, String approvalId) {
+        Class<?> testClass = context.getRequiredTestClass();
 
-		approvalPath = basePath.resolve(testClass.getName().replace(".", File.separator)).resolve(approvalId);
-	}
+        approvalPath = basePath.resolve(testClass.getName().replace(".", File.separator)).resolve(approvalId);
+    }
 
-	@Override
-	public Path getPath(T value, Path approvalFilePath) {
-		return approvalPath.resolve(approvalFilePath);
-	}
+    @Override
+    public Path getPath(T value, Path approvalFilePath) {
+        return approvalPath.resolve(approvalFilePath);
+    }
 
 }

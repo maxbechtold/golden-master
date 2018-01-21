@@ -2,6 +2,7 @@ package maxbe.goldenmaster.junit.extension;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 import com.github.approval.Approval;
 
+import maxbe.goldenmaster.approval.ApprovalIdResolver;
 import maxbe.goldenmaster.approval.ApprovalScriptWriter;
 import maxbe.goldenmaster.approval.FileConverter;
 import maxbe.goldenmaster.approval.JUnitReporter;
@@ -77,9 +79,9 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        String approvalId = getApprovalId(context) + getRunIdSuffix(context.getDisplayName());
-        pathMapper = new TemplatedTestPathMapper<>(context, Paths.get("src", "test", "resources", "approved"),
-                approvalId);
+        String runId = new ApprovalIdResolver(getAnnotation(context)).resolveRunIdFor(context);
+        Path basePath = Paths.get("src", "test", "resources", "approved");
+        pathMapper = new TemplatedTestPathMapper<>(context, basePath, runId);
     }
 
     @Override
@@ -90,23 +92,10 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
                 .withConveter(new FileConverter())//
                 .withReporter(get(context, JUnitReporter.class, REPORTER_KEY)).build();
 
-        String fileName = getApprovalId(context) + ".approved";
+        ApprovalIdResolver approvalIdResolver = new ApprovalIdResolver(getAnnotation(context));
+
+        String fileName = approvalIdResolver.resolveApprovalIdFor(context) + ".approved";
         approval.verify(outputFile, Paths.get(fileName));
-    }
-
-    private String getApprovalId(ExtensionContext context) {
-        GoldenMasterRun annotation = getAnnotation(context);
-        if (!GoldenMasterRun.AUTO_ID.equals(annotation.id())) {
-            return annotation.id();
-        }
-        return context.getRequiredTestMethod().getName();
-    }
-
-    private String getRunIdSuffix(String displayName) {
-        // REVIEW #3 Can this be done better?
-        String idWithoutBraces = displayName.substring(1, displayName.length() - 1);
-        int runId = Integer.valueOf(idWithoutBraces) - 1;
-        return "[" + runId + "]";
     }
 
     @Override

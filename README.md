@@ -13,7 +13,7 @@ A harness for easy writing of [Golden Master tests](https://dzone.com/articles/t
 
 ## How to use (basic explanation)
 
-You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so (check out [ExampleGoldenMasterTest](src/test/java/maxbe/goldenmaster/example/ExampleGoldenMasterTest) for a more detailed example):
+You basically implement a [JUnit 5 templated test](http://junit.org/junit5/docs/current/user-guide/#writing-tests-test-templates) like so (check out [ExampleGoldenMasterTest](src/test/java/maxbe/goldenmaster/example/ExampleGoldenMasterTest.java) for a more detailed example):
 
 ```java
 @GoldenMasterTest

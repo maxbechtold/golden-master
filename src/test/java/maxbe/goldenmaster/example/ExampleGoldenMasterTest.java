@@ -16,11 +16,23 @@ public class ExampleGoldenMasterTest {
 
     private File outputFile;
 
+    /**
+     * Set up your Golden Master run. The parameter {@code index} is just for illustration - drop it if you don't need
+     * it
+     *
+     */
     @BeforeEach
     void setUp(File outputFile, Integer index) throws Exception {
         this.outputFile = outputFile;
     }
 
+    /**
+     * Instrument your code/program for the provided index. You can specify a number of {@code repetitions} if you're
+     * unhappy with the default value.
+     * <p/>
+     * Also, you can provide an {@code id} that bundles instrumentation variations together. See
+     * {@link GoldenMasterRun#id()}.
+     */
     @GoldenMasterRun(repetitions = 5)
     void test(Integer index) throws IOException {
         int inputValue = index * 1000;

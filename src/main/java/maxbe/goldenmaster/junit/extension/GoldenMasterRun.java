@@ -20,9 +20,13 @@ public @interface GoldenMasterRun {
     int repetitions() default DEFAULT_REPETITIONS;
 
     /**
-     * Allows to define multiple instrumentations of the same usecase which can be approved against each other.
+     * Allows to define multiple instrumentations of the same usecase which will be approved against each other.
+     * <p/>
      *
-     * TODO #2 Document in GitHub
+     * One use case is to test saving/loading the program state where you write two test methods that 1) run the program
+     * start to end and 2) run the program with intermittent saving and loading. If you expect the outcome to be
+     * identical, you can approve 2) against 1) by using the same <i>approval ID.</i>
+     *
      */
     String id() default AUTO_ID;
 

@@ -28,7 +28,8 @@ import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeAllCallback,
         BeforeEachCallback, AfterTestExecutionCallback, AfterAllCallback {
 
-    private static final Namespace NAMESPACE = Namespace.create(RunInvocationContextProvider.class);
+    static final Namespace NAMESPACE = Namespace.create(RunInvocationContextProvider.class);
+
     private static final String REPORTER_KEY = "REPORTER";
     private static final String SCRIPT_WRITER_KEY = "SCRIPT_WRITER";
     private static final String APPROVAL_SCRIPT_NAME = "approveAllFailed";

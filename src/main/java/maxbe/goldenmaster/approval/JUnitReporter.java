@@ -56,6 +56,9 @@ public class JUnitReporter implements Reporter {
 
     @Override
     public void approveNew(byte[] value, File fileForApproval, File fileForVerification) {
+        // TODO #2 Similar to notTheSame, for the initial approval we should prepare the script and advise the user to
+        // check the generated approval files.
+        // TODO MAX Currently, jitpack build fails...
         fail("First approval, created approval file. Please run again");
     }
 }

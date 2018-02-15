@@ -53,8 +53,6 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
         return IntStream.range(0, repetitions).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile));
     }
 
-    // TODO #2 Ensure same number of repetitions for all tests with the same approvalId by moving repetitions to
-    // @GoldenMasterTest?
     private int determineRepetitions(ExtensionContext context) {
         GoldenMasterRun goldenMasterAnnotation = getAnnotation(context);
         if (goldenMasterAnnotation == null) {

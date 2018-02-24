@@ -31,14 +31,13 @@ public class ATest {
 }
 ```
 
-When you run your test for the first time, the outputs will serve as the initial *master files*. You are asked to *approve* the previous outputs by running the tests again and then manually executing a generated script file*.
+When you run your test for the first time, the outputs will serve as the initial *master files*. You are asked to *approve* the previous outputs by manually executing a generated script file.
 
 Every successive test run will then be matched against those master files - and fail if there are changes (e.g. due to mistakes during refactoring of the tested code). Any mismatch between actual and expected output (the master files) is part of the thrown Exception - and will be visualized if your IDE supports [OpenTest4J](https://github.com/ota4j-team/opentest4j) (e.g. Eclipse, IntelliJ)
 
 If you change the tested code in a manner you consider *valid*, you can approve any changes that result in the output files by running the provided approval script.
 
 *(I'm working on [simplifying this step](https://github.com/maxbechtold/golden-master/issues/6))
-
 
 ## Requirements
 Java 8

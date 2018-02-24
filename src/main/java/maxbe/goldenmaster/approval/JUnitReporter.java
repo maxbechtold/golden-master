@@ -1,7 +1,5 @@
 package maxbe.goldenmaster.approval;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
@@ -20,18 +18,23 @@ public class JUnitReporter implements Reporter {
     }
 
     @Override
-    public void notTheSame(byte[] oldValue, File fileForVerification, byte[] newValue, File fileForApproval) {
-        if (oldValue.length == newValue.length) {
-            double error = calculateError(oldValue, newValue);
+    public void notTheSame(byte[] oldValueBytes, File fileForVerification, byte[] newValueBytes, File fileForApproval) {
+        if (oldValueBytes.length == newValueBytes.length) {
+            double error = calculateError(oldValueBytes, newValueBytes);
             if (error < MAX_DEVIATION) {
                 throw new TestAbortedException(String
                         .format("Approval failed with less than %s %% difference, skipping test", MAX_DEVIATION * 100));
             }
         }
 
+        String message = "Approval failed, please check console output.\n";
+        notifyMismatch(fileForVerification, fileForApproval, message, asString(oldValueBytes), asString(newValueBytes));
+    }
+
+    private void notifyMismatch(File fileForVerification, File fileForApproval, String message, String oldValue,
+            String newValue) throws AssertionFailedError {
         approvalScriptWriter.addMoveCommand(fileForApproval, fileForVerification);
-        throw new AssertionFailedError("Approval failed, please check console output.\n", asString(oldValue),
-                asString(newValue));
+        throw new AssertionFailedError(message, oldValue, newValue);
     }
 
     private String asString(byte[] oldValue) {
@@ -55,7 +58,8 @@ public class JUnitReporter implements Reporter {
     }
 
     @Override
-    public void approveNew(byte[] value, File fileForApproval, File fileForVerification) {
-        fail("First approval, created approval file. Please run again");
+    public void approveNew(byte[] newValueBytes, File fileForApproval, File fileForVerification) {
+        String message = "First approval, please check console output.\n";
+        notifyMismatch(fileForVerification, fileForApproval, message, "", asString(newValueBytes));
     }
 }

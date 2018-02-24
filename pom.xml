@@ -17,9 +17,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.nikolavp</groupId>
+			<groupId>com.github.maxbechtold.approval</groupId>
 			<artifactId>approval-core</artifactId>
-			<version>0.3</version>
+			<version>jitpack-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -73,4 +73,11 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 </project>

@@ -37,7 +37,7 @@ Every successive test run will then be matched against those master files - and 
 
 If you change the tested code in a manner you consider *valid*, you can approve any changes that result in the output files by running the provided approval script.
 
-*(I'm working on [simplifying this step](https://github.com/maxbechtold/golden-master/issues/2))
+*(I'm working on [simplifying this step](https://github.com/maxbechtold/golden-master/issues/6))
 
 
 ## Requirements

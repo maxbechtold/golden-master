@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -26,7 +26,7 @@ import maxbe.goldenmaster.approval.JUnitReporter;
 import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 
 public class RunInvocationContextProvider implements TestTemplateInvocationContextProvider, BeforeAllCallback,
-        BeforeEachCallback, AfterTestExecutionCallback, AfterAllCallback {
+        BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
     static final Namespace NAMESPACE = Namespace.create(RunInvocationContextProvider.class);
 
@@ -84,7 +84,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     }
 
     @Override
-    public void afterTestExecution(ExtensionContext context) throws Exception {
+    public void afterEach(ExtensionContext context) throws Exception {
         Approval<File> approval = Approval.of(File.class)//
                 .withPathMapper(pathMapper)//
                 // TODO #3 Fork and suggest fix

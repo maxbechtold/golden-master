@@ -31,6 +31,7 @@ public class ApprovalIdResolver {
     private String getRunIdSuffix(String displayName) {
         // Sadly, it's infeasible to provide the invocation index via the ExtensionContext as we get here
         // @BeforeEach test invocation. Thus, derive it from the display name.
+        // TODO MAX Perhaps ExtensionContext#getConfigurationParameter can provide the index?
         String idWithoutBraces = displayName.substring(1, displayName.length() - 1);
         int runId = Integer.valueOf(idWithoutBraces) - 1;
         return "[" + runId + "]";

@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import maxbe.goldenmaster.junit.extension.GoldenMasterRun;
 import maxbe.goldenmaster.junit.extension.GoldenMasterTest;
 
+@EnabledIfSystemProperty(named = "maxbe.goldenmaster.testWithExamples", matches = "true")
 @GoldenMasterTest
 public class ExampleGoldenMasterTest {
 

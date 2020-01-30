@@ -8,6 +8,7 @@ import org.opentest4j.TestAbortedException;
 
 import com.github.approval.Reporter;
 
+// TODO #10 Move this and rest of package to approval library
 public class JUnitReporter implements Reporter {
 
     private static final double MAX_DEVIATION = 0.000;
@@ -34,7 +35,10 @@ public class JUnitReporter implements Reporter {
     private void notifyMismatch(File fileForVerification, File fileForApproval, String message, String oldValue,
             String newValue) throws AssertionFailedError {
         approvalScriptWriter.addMoveCommand(fileForApproval, fileForVerification);
-        throw new AssertionFailedError(message, oldValue, newValue);
+        AssertionFailedError error = new AssertionFailedError(message, oldValue, newValue);
+        String format = "expected: %sactual:   %s%n";
+        System.err.printf(format, error.getExpected().getStringRepresentation(), error.getActual().getStringRepresentation());
+        throw error;
     }
 
     private String asString(byte[] oldValue) {

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 import com.github.approval.Approval;
+import com.github.approval.Reporter;
 
 import maxbe.goldenmaster.approval.ApprovalIdResolver;
 import maxbe.goldenmaster.approval.ApprovalScriptWriter;
@@ -87,9 +88,9 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     public void afterEach(ExtensionContext context) throws Exception {
         Approval<File> approval = Approval.of(File.class)//
                 .withPathMapper(pathMapper)//
-                // TODO #3 Fork and suggest fix
+                // TODO #10 Fix in approval fork
                 .withConveter(new FileConverter())//
-                .withReporter(get(context, JUnitReporter.class, REPORTER_KEY)).build();
+                .withReporter(get(context, Reporter.class, REPORTER_KEY)).build();
 
         ApprovalIdResolver approvalIdResolver = new ApprovalIdResolver(getAnnotation(context));
 

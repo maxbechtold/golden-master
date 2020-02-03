@@ -18,7 +18,7 @@ public class ApprovalIdResolver {
     }
 
     private String getApprovalId(ExtensionContext context) {
-        if (!GoldenMasterRun.AUTO_ID.equals(goldenMasterRunAnnotation.id())) {
+        if (goldenMasterRunAnnotation != null && !GoldenMasterRun.AUTO_ID.equals(goldenMasterRunAnnotation.id())) {
             return goldenMasterRunAnnotation.id();
         }
         return context.getRequiredTestMethod().getName();

@@ -39,3 +39,6 @@ If you change the tested code in a manner you consider *valid*, you can approve 
 
 ## Requirements
 Java 8
+
+## Pitfalls
+*Always* annotate test classes with `@GoldenMasterTest`, and use *only* `@GoldenMasterRun` for the test methods (cf. this [issue](https://github.com/maxbechtold/golden-master/issues/11))

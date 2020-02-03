@@ -43,9 +43,10 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
         outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), ".txt");
     }
 
+    // FIXME #11 Currently, the harness fails with multiple TestDescriptors, see warning when using @GoldenMasterRun with @Test
     @Override
     public boolean supportsTestTemplate(ExtensionContext context) {
-        return true;
+        return getSupportedAnnotation(context) != null;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     }
 
     private int determineRepetitions(ExtensionContext context) {
-        GoldenMasterRun goldenMasterAnnotation = getAnnotation(context);
+        GoldenMasterRun goldenMasterAnnotation = getSupportedAnnotation(context);
         if (goldenMasterAnnotation == null) {
             return GoldenMasterRun.DEFAULT_REPETITIONS;
         }
@@ -66,8 +67,8 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
         return repetitions;
     }
 
-    private GoldenMasterRun getAnnotation(ExtensionContext context) {
-        return context.getElement().get().getAnnotation(GoldenMasterRun.class);
+    private GoldenMasterRun getSupportedAnnotation(ExtensionContext context) {
+        return context.getElement().map(element -> element.getAnnotation(GoldenMasterRun.class)).orElse(null);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        String runId = new ApprovalIdResolver(getAnnotation(context)).resolveRunIdFor(context);
+        String runId = new ApprovalIdResolver(getSupportedAnnotation(context)).resolveRunIdFor(context);
         Path basePath = Paths.get("src", "test", "resources", "approved");
         pathMapper = new TemplatedTestPathMapper<>(context, basePath, runId);
     }
@@ -93,7 +94,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
                 .withConverter(new FileConverter())//
                 .withReporter(get(context, Reporter.class, REPORTER_KEY)).build();
 
-        ApprovalIdResolver approvalIdResolver = new ApprovalIdResolver(getAnnotation(context));
+        ApprovalIdResolver approvalIdResolver = new ApprovalIdResolver(getSupportedAnnotation(context));
 
         String fileName = approvalIdResolver.resolveApprovalIdFor(context) + ".approved";
         approval.verify(outputFile, Paths.get(fileName));
@@ -112,7 +113,12 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     }
 
     private <T> T get(ExtensionContext context, Class<T> type, String key) {
-        return getStore(context).get(key, type);
+        T element = getStore(context).get(key, type);
+        if (element == null) {
+            throw new RuntimeException(String.format("Did not find element for key '%s', did you annotate your class with @%s?", 
+                    key, GoldenMasterTest.class.getSimpleName()));
+        }
+        return element;
     }
 
     private Store getStore(ExtensionContext context) {

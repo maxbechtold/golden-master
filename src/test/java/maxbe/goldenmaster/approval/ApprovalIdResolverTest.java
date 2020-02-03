@@ -24,6 +24,14 @@ public class ApprovalIdResolverTest {
     }
 
     @Test
+    void noExceptionIfNoAnnotationPresent() throws Exception {
+        ApprovalIdResolver resolver = new ApprovalIdResolver(null);
+
+        String approvalId = resolver.resolveApprovalIdFor(context);
+
+        assertThat(approvalId).isEqualTo(someMethod().getName());
+    }
+    @Test
     void resolvesIdIfSpecified() throws Exception {
         String testId = "test-id";
 

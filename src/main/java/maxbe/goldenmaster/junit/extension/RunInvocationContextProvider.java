@@ -88,8 +88,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
     public void afterEach(ExtensionContext context) throws Exception {
         Approval<File> approval = Approval.of(File.class)//
                 .withPathMapper(pathMapper)//
-                // TODO #10 Fix in approval fork
-                .withConveter(new FileConverter())//
+                .withConverter(new FileConverter())//
                 .withReporter(get(context, Reporter.class, REPORTER_KEY)).build();
 
         ApprovalIdResolver approvalIdResolver = new ApprovalIdResolver(getAnnotation(context));

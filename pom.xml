@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.maxbechtold</groupId>
     <artifactId>golden-master</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1-SNAPSHOT</version>
     <name>Golden Master JUnit Extension</name>
     <description>Framework for painless Golden Master Testing</description>
     <inceptionYear>2017</inceptionYear>
@@ -18,7 +18,7 @@
         <connection>scm:git:git@github.com:maxbechtold/golden-master.git</connection>
         <developerConnection>scm:git:git@github.com:maxbechtold/golden-master.git</developerConnection>
         <url>git@github.com:maxbechtold/golden-master.git</url>
-        <tag>v0.6</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencies>

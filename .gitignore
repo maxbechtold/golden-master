@@ -3,4 +3,4 @@
 .project
 /.settings/
 /src/test/resources/approved
-approveAllFailed*
+approve-*

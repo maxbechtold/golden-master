@@ -33,7 +33,7 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     private static final String REPORTER_KEY = "REPORTER";
     private static final String SCRIPT_WRITER_KEY = "SCRIPT_WRITER";
-    private static final String APPROVAL_SCRIPT_NAME = "approveAllFailed";
+    private static final String APPROVAL_SCRIPT_NAME = "approve";
 
     private final File outputFile;
 
@@ -72,7 +72,9 @@ public class RunInvocationContextProvider implements TestTemplateInvocationConte
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
-        ApprovalScriptWriter approvalScriptWriter = ApprovalScriptWriter.create(APPROVAL_SCRIPT_NAME);
+        String contextId = context.getTestClass().map(Class::getName).map(name -> "-" + name).orElse("");
+        ApprovalScriptWriter approvalScriptWriter = ApprovalScriptWriter.create(APPROVAL_SCRIPT_NAME + contextId);
+        
         getStore(context).put(SCRIPT_WRITER_KEY, approvalScriptWriter);
         getStore(context).put(REPORTER_KEY, new JUnitReporter(approvalScriptWriter));
     }

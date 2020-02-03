@@ -1,7 +1,7 @@
-# golden-master
-A harness for easy writing of [Golden Master tests](https://dzone.com/articles/testing-legacy-code-golden) in Java. Follow the JitPack button below in order to include it in your project.
+# goldenmaster-junit-extension
+A harness for easy writing of [Golden Master tests](https://dzone.com/articles/testing-legacy-code-golden) in Java. This wraps **[FastApproval](https://github.com/maxbechtold/fast-approval)** in an easy to apply JUnit annotation. Follow the JitPack button below in order to include it in your project.
 
-[![](https://jitpack.io/v/maxbechtold/golden-master.svg)](https://jitpack.io/#maxbechtold/golden-master) [![Build Status](https://travis-ci.org/maxbechtold/golden-master.svg?branch=master)](https://travis-ci.org/maxbechtold/golden-master)
+[![JitPack](https://jitpack.io/v/maxbechtold/golden-master.svg)](https://jitpack.io/#maxbechtold/golden-master) [![Build Status](https://travis-ci.org/maxbechtold/golden-master.svg?branch=master)](https://travis-ci.org/maxbechtold/golden-master)
 
 ## Benefits
 
@@ -33,11 +33,9 @@ public class ATest {
 
 When you run your test for the first time, the outputs will serve as the initial *master files*. You are asked to *approve* the previous outputs by manually executing a generated script file.
 
-Every successive test run will then be matched against those master files - and fail if there are changes (e.g. due to mistakes during refactoring of the tested code). Any mismatch between actual and expected output (the master files) is part of the thrown Exception - and will be visualized if your IDE supports [OpenTest4J](https://github.com/ota4j-team/opentest4j) (e.g. Eclipse, IntelliJ)
+Every successive test run will then be matched against those master files - and fail if there are changes (e.g. due to mistakes during refactoring of the tested code). Any mismatch between actual and expected output (the master files) is part of the thrown Exception - and will be visualized if you use an IDE that supports [OpenTest4J](https://github.com/ota4j-team/opentest4j) (e.g. Eclipse, IntelliJ)
 
 If you change the tested code in a manner you consider *valid*, you can approve any changes that result in the output files by running the provided approval script.
-
-*(I'm working on [simplifying this step](https://github.com/maxbechtold/golden-master/issues/6))
 
 ## Requirements
 Java 8

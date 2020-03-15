@@ -19,12 +19,12 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 
 import com.github.approval.Approval;
 import com.github.approval.Reporter;
+import com.github.approval.converters.FileConverter;
+import com.github.approval.pathmappers.TestClassPathMapper;
+import com.github.approval.reporters.JUnitReporter;
 import com.github.approval.utils.ApprovalScriptWriter;
 
 import maxbe.goldenmaster.approval.ApprovalIdResolver;
-import maxbe.goldenmaster.approval.FileConverter;
-import maxbe.goldenmaster.approval.JUnitReporter;
-import maxbe.goldenmaster.approval.TemplatedTestPathMapper;
 
 public class RunInvocationContextProvider
         implements TestTemplateInvocationContextProvider, BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
@@ -37,7 +37,7 @@ public class RunInvocationContextProvider
 
     private final File outputFile;
 
-    private TemplatedTestPathMapper<File> pathMapper;
+    private TestClassPathMapper<File> pathMapper;
 
     public RunInvocationContextProvider() throws IOException {
         outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), ".txt");
@@ -85,7 +85,7 @@ public class RunInvocationContextProvider
     public void beforeEach(ExtensionContext context) throws Exception {
         String runId = new ApprovalIdResolver(getSupportedAnnotation(context)).resolveRunIdFor(context);
         Path basePath = Paths.get("src", "test", "resources", "approved");
-        pathMapper = new TemplatedTestPathMapper<>(context, basePath, runId);
+        pathMapper = new TestClassPathMapper<>(context.getRequiredTestClass(), basePath, runId);
     }
 
     @Override

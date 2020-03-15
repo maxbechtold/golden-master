@@ -7,6 +7,7 @@ import org.opentest4j.AssertionFailedError;
 import org.opentest4j.TestAbortedException;
 
 import com.github.approval.Reporter;
+import com.github.approval.utils.ApprovalScriptWriter;
 
 // TODO #10 Move this and rest of package to approval library
 public class JUnitReporter implements Reporter {
@@ -23,8 +24,7 @@ public class JUnitReporter implements Reporter {
         if (oldValueBytes.length == newValueBytes.length) {
             double error = calculateError(oldValueBytes, newValueBytes);
             if (error < MAX_DEVIATION) {
-                throw new TestAbortedException(String
-                        .format("Approval failed with less than %s %% difference, skipping test", MAX_DEVIATION * 100));
+                throw new TestAbortedException(String.format("Approval failed with less than %s %% difference, skipping test", MAX_DEVIATION * 100));
             }
         }
 
@@ -32,8 +32,7 @@ public class JUnitReporter implements Reporter {
         notifyMismatch(fileForVerification, fileForApproval, message, asString(oldValueBytes), asString(newValueBytes));
     }
 
-    private void notifyMismatch(File fileForVerification, File fileForApproval, String message, String oldValue,
-            String newValue) throws AssertionFailedError {
+    private void notifyMismatch(File fileForVerification, File fileForApproval, String message, String oldValue, String newValue) throws AssertionFailedError {
         approvalScriptWriter.addMoveCommand(fileForApproval, fileForVerification);
         AssertionFailedError error = new AssertionFailedError(message, oldValue, newValue);
         String format = "expected: %sactual:   %s%n";

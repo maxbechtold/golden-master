@@ -31,6 +31,7 @@ public class ApprovalIdResolverTest {
 
         assertThat(approvalId).isEqualTo(someMethod().getName());
     }
+
     @Test
     void resolvesIdIfSpecified() throws Exception {
         String testId = "test-id";

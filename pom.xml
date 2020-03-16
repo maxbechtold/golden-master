@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.github.maxbechtold.fast-approval</groupId>
             <artifactId>approval-core</artifactId>
-            <version>move-approval-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

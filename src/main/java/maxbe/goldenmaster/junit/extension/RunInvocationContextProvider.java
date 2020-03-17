@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -28,6 +29,8 @@ import maxbe.goldenmaster.approval.ApprovalIdResolver;
 
 public class RunInvocationContextProvider
         implements TestTemplateInvocationContextProvider, BeforeAllCallback, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
+
+    private static final Logger LOGGER = Logger.getLogger(RunInvocationContextProvider.class.getName());
 
     static final Namespace NAMESPACE = Namespace.create(RunInvocationContextProvider.class);
 
@@ -107,7 +110,7 @@ public class RunInvocationContextProvider
         boolean scriptCreated = scriptWriter.updateScript();
 
         if (scriptCreated) {
-            System.out.println("Not all approvals passed, please execute " + scriptWriter.getScriptFile().getName() + " to approve current results");
+            LOGGER.warning("Not all approvals passed. To accept ALL changes, execute " + scriptWriter.getScriptFile().getName());
         }
         outputFile.delete();
     }

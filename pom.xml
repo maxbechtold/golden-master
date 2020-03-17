@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.maxbechtold</groupId>
     <artifactId>golden-master</artifactId>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.7-SNAPSHOT</version>
     <name>Golden Master JUnit Extension</name>
     <description>Framework for painless Golden Master Testing</description>
     <inceptionYear>2017</inceptionYear>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.github.maxbechtold.fast-approval</groupId>
             <artifactId>approval-core</artifactId>
-            <version>0.5</version>
+            <version>0.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

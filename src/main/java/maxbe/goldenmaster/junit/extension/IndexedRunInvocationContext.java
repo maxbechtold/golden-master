@@ -14,15 +14,17 @@ class IndexedRunInvocationContext implements TestTemplateInvocationContext {
 
     private final Integer index;
     private final File outputFile;
+    private final RunInvocationContextProvider contextProvider;
 
-    IndexedRunInvocationContext(Integer index, File outputFile) {
+    IndexedRunInvocationContext(Integer index, File outputFile, RunInvocationContextProvider contextProvider) {
         this.index = index;
         this.outputFile = outputFile;
+        this.contextProvider = contextProvider;
     }
 
     @Override
     public List<Extension> getAdditionalExtensions() {
-        return Arrays.asList(indexResolver(), outputFileResolver());
+        return Arrays.asList(indexResolver(), outputFileResolver(), contextProviderResolver());
     }
 
     private ParameterResolver indexResolver() {
@@ -51,6 +53,21 @@ class IndexedRunInvocationContext implements TestTemplateInvocationContext {
             @Override
             public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
                 return outputFile;
+            }
+        };
+    }
+
+    private ParameterResolver contextProviderResolver() {
+        return new ParameterResolver() {
+
+            @Override
+            public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+                return parameterContext.getParameter().getType().equals(RunInvocationContextProvider.class);
+            }
+
+            @Override
+            public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+                return contextProvider;
             }
         };
     }

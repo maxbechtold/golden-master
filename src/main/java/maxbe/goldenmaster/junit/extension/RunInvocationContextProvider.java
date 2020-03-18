@@ -2,6 +2,7 @@ package maxbe.goldenmaster.junit.extension;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import com.github.approval.Reporter;
 import com.github.approval.converters.FileConverter;
 import com.github.approval.pathmappers.TestClassPathMapper;
 import com.github.approval.reporters.JUnitReporter;
+import com.github.approval.reporters.WindowsReporters;
 import com.github.approval.utils.ApprovalScriptWriter;
 
 import maxbe.goldenmaster.approval.ApprovalIdResolver;
@@ -42,6 +44,8 @@ public class RunInvocationContextProvider
 
     private TestClassPathMapper<File> pathMapper;
 
+    private ExtensionContext currentContext;
+
     public RunInvocationContextProvider() throws IOException {
         outputFile = File.createTempFile("goldenmaster_recording_" + System.currentTimeMillis(), ".txt");
     }
@@ -56,7 +60,7 @@ public class RunInvocationContextProvider
     @Override
     public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
         int repetitions = determineRepetitions(context);
-        return IntStream.range(0, repetitions).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile));
+        return IntStream.range(0, repetitions).boxed().map(index -> new IndexedRunInvocationContext(index, outputFile, this));
     }
 
     private int determineRepetitions(ExtensionContext context) {
@@ -86,7 +90,9 @@ public class RunInvocationContextProvider
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
+        this.currentContext = context;
         String runId = new ApprovalIdResolver(getSupportedAnnotation(context)).resolveRunIdFor(context);
+        // TODO maxbechtold Allow user to select other resource dir (not Maven based)?
         Path basePath = Paths.get("src", "test", "resources", "approved");
         pathMapper = new TestClassPathMapper<>(context.getRequiredTestClass(), basePath, runId);
     }
@@ -126,5 +132,36 @@ public class RunInvocationContextProvider
 
     private Store getStore(ExtensionContext context) {
         return context.getStore(NAMESPACE);
+    }
+
+    // TODO maxbechtold allow multiple oracles, wrap in JUnitReporter
+    public void registerOracle(String name, String commandLine, OracleMode oracleMode) {
+        if (shouldAskOracle(name, oracleMode)) {
+            getStore(this.currentContext).put(REPORTER_KEY,
+                    new WindowsReporters.WindowsExecutableReporter("cmd /C " + commandLine, "cmd /C " + commandLine, "FC.exe"));
+        }
+    }
+
+    private boolean shouldAskOracle(String name, OracleMode oracleMode) {
+        Path lockFile = Paths.get(name + ".lock");
+        if (oracleMode == OracleMode.ALWAYS) {
+            return true;
+        }
+        if (oracleMode == OracleMode.LOCKED) {
+            if (Files.exists(lockFile)) {
+                return false;
+            }
+            createFileSafely(lockFile);
+            return true;
+        }
+        return false;
+    }
+
+    private void createFileSafely(Path lockFile) {
+        try {
+            Files.createFile(lockFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

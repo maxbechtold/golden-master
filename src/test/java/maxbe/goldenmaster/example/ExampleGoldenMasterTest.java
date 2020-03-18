@@ -11,6 +11,8 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import maxbe.goldenmaster.junit.extension.GoldenMasterRun;
 import maxbe.goldenmaster.junit.extension.GoldenMasterTest;
+import maxbe.goldenmaster.junit.extension.OracleMode;
+import maxbe.goldenmaster.junit.extension.RunInvocationContextProvider;
 
 @EnabledIfSystemProperty(named = "maxbe.goldenmaster.testWithExamples", matches = "true")
 @GoldenMasterTest
@@ -24,8 +26,10 @@ public class ExampleGoldenMasterTest {
      *
      */
     @BeforeEach
-    void setUp(File outputFile, Integer index) throws Exception {
+    void setUp(File outputFile, RunInvocationContextProvider contextProvider) throws Exception {
         this.outputFile = outputFile;
+        String fcIgnoringCase = "FC.exe /C";
+        contextProvider.registerOracle("ignore-case", fcIgnoringCase, OracleMode.LOCKED);
     }
 
     /**

@@ -23,9 +23,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.maxbechtold.fast-approval</groupId>
+            <groupId>com.github.maxbechtold</groupId>
             <artifactId>approval-core</artifactId>
-            <version>0.5.2</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

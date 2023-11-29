@@ -1,8 +1,8 @@
 # goldenmaster-junit-extension
 A harness for easy writing of [Golden Master tests](https://dzone.com/articles/testing-legacy-code-golden) in Java. This wraps **[FastApproval](https://github.com/maxbechtold/fast-approval)** in an easy to apply JUnit annotation. Follow the JitPack button below in order to include it in your project.
 
-[![JitPack](https://jitpack.io/v/maxbechtold/golden-master.svg)](https://jitpack.io/#maxbechtold/golden-master) [![Build Status](https://travis-ci.org/maxbechtold/golden-master.svg?branch=master)](https://travis-ci.org/maxbechtold/golden-master)
-
+[![Java CI with Maven](https://github.com/maxbechtold/golden-master/actions/workflows/maven.yml/badge.svg)](https://github.com/maxbechtold/golden-master/actions/workflows/maven.yml)
+[![JitPack](https://jitpack.io/v/maxbechtold/golden-master.svg)](https://jitpack.io/#maxbechtold/golden-master)
 ## Benefits
 
 * No cumbersome boilerplate code - focus on your program instrumentation

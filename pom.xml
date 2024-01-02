@@ -31,6 +31,7 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.jupiter.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.opentest4j</groupId>
